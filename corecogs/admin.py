@@ -2,6 +2,10 @@ import os
 import discord
 import settings
 from discord.ext import commands
+from main import bot
+
+def setup(bot):
+    bot.add_cog(AdminCogs(bot))
 
 class AdminCogs(commands.Cog):
     def __init__(self, bot):
@@ -15,24 +19,39 @@ class AdminCogs(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def loadcog(self, ctx, cog: str):
-        if cog in settings.cog_list:
-            try:
-                self.bot.load_extension(cog)
-            except Exception as e:
-                await ctx.send("Could not load cog!" + "\n" + e)
+        try:
+            self.bot.load_extension(f'extracogs.{cog}')
+            print(f'Loaded {cog}!')
+        except Exception as e:
+            await ctx.send("Could not load cog!" + "\n" + str(e))
 
     @commands.command()
     @commands.is_owner()
     async def unloadcog(self, ctx, cog: str):
-        if cog in settings.cog_list:
-            try:
-                self.bot.unload_extension(cog)
-            except Exception as e:
-                await ctx.send("Could not unload cog!" + "\n" + e)
+        try:
+            if cog != 'admin':
+                self.bot.unload_extension(f'extracogs.{cog}')
+                print(f'Unloaded {cog}!')
+            else:
+                await ctx.send('Crucial cog, cannot unload!')
+        except Exception as e:
+            await ctx.send("Could not unload cog!" + "\n" + str(e))
 
     @commands.command()
     @commands.is_owner()
-    async def presence(self, ctx, presence_type: ActivityTypeConverter, *message: str, ):
+    async def reloadcog(self, ctx, cog: str):
+        try:
+            if cog not in settings.cog_list:
+                self.bot.reload_extension(f'extracogs.{cog}')
+            else:
+                self.bot.reload_extension(f'corecogs.{cog}')
+            print(f'Reloaded {cog}!')
+        except Exception as e:
+            await ctx.send("Could not reload cog!" + "\n" + str(e))
+
+    @commands.command()
+    @commands.is_owner()
+    async def presence(self, ctx, presence_type: str):
         """
         Sets the presence status of the bot
 
