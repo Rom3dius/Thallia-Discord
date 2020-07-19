@@ -2,7 +2,7 @@ import os
 import discord
 import settings
 from discord.ext import commands
-from main import bot
+from main import bot, cog_list
 
 def setup(bot):
     bot.add_cog(AdminCogs(bot))
@@ -29,7 +29,7 @@ class AdminCogs(commands.Cog):
     @commands.is_owner()
     async def unloadcog(self, ctx, cog: str):
         try:
-            if cog not in settings.cog_list:
+            if cog not in cog_list:
                 self.bot.unload_extension(f'extracogs.{cog}')
                 print(f'Unloaded {cog}!')
             else:
@@ -41,7 +41,7 @@ class AdminCogs(commands.Cog):
     @commands.is_owner()
     async def reloadcog(self, ctx, cog: str):
         try:
-            if cog not in settings.cog_list:
+            if cog not in cog_list:
                 self.bot.reload_extension(f'extracogs.{cog}')
             else:
                 self.bot.reload_extension(f'corecogs.{cog}')
