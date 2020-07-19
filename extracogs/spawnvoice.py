@@ -15,9 +15,12 @@ class SpawnVoiceCogs(commands.Cog):
 
     @commands.command()
     async def voice(self, ctx, name: str, limit: int=99):
-        if ctx.author.voice.channel.name == name:
-            await ctx.author.voice.channel.edit(user_limit=limit)
-            return
+        try:
+            if ctx.author.voice.channel.name == name:
+                await ctx.author.voice.channel.edit(user_limit=limit)
+                return
+        except:
+            pass
         for x in ctx.guild.categories:
             if x.name == "Temp Channels":
                 await x.create_voice_channel(name, user_limit=limit, bitrate=32000)
