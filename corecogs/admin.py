@@ -29,7 +29,11 @@ class AdminCogs(commands.Cog):
     @commands.is_owner()
     async def unloadcog(self, ctx, cog: str):
         try:
+<<<<<<< HEAD
             if cog not in cog_list:
+=======
+            if cog not in settings.cog_list:
+>>>>>>> 197c98904a0629581184f32448af57995facb08f
                 self.bot.unload_extension(f'extracogs.{cog}')
                 print(f'Unloaded {cog}!')
             else:
