@@ -1,8 +1,6 @@
-import os
-import discord
-import settings
+import os, discord, settings, logging
 from discord.ext import commands
-from main import bot, cog_list
+from main import bot, cog_list, timestamp
 
 def setup(bot):
     bot.add_cog(AdminCogs(bot))
@@ -24,22 +22,21 @@ class AdminCogs(commands.Cog):
             print(f'Loaded {cog}!')
         except Exception as e:
             await ctx.send("Could not load cog!" + "\n" + str(e))
+            #logging.warning(timestamp() + 'Failed to load cog: ' + str(e))
+
 
     @commands.command()
     @commands.is_owner()
     async def unloadcog(self, ctx, cog: str):
         try:
-<<<<<<< HEAD
             if cog not in cog_list:
-=======
-            if cog not in settings.cog_list:
->>>>>>> 197c98904a0629581184f32448af57995facb08f
                 self.bot.unload_extension(f'extracogs.{cog}')
                 print(f'Unloaded {cog}!')
             else:
                 await ctx.send('Crucial cog, cannot unload!')
         except Exception as e:
             await ctx.send("Could not unload cog!" + "\n" + str(e))
+            #logging.warning(timestamp() + 'Failed to unload cog: ' + str(e))
 
     @commands.command()
     @commands.is_owner()
@@ -52,6 +49,7 @@ class AdminCogs(commands.Cog):
             print(f'Reloaded {cog}!')
         except Exception as e:
             await ctx.send("Could not reload cog!" + "\n" + str(e))
+            #logging.warning(timestamp() + 'Failed to reload cog: ' + str(e))
 
     @commands.command()
     @commands.is_owner()

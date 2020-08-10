@@ -1,8 +1,6 @@
-import os
-import discord
-import settings
+import os, discord, settings
 from discord.ext import commands, tasks
-from main import bot
+from main import bot, timestamp
 
 def setup(bot):
     bot.add_cog(SpawnVoiceCogs(bot))
@@ -15,18 +13,12 @@ class SpawnVoiceCogs(commands.Cog):
 
     @commands.command()
     async def voice(self, ctx, name: str, limit: int=99):
-<<<<<<< HEAD
         try:
             if ctx.author.voice.channel.name == name:
                 await ctx.author.voice.channel.edit(user_limit=limit)
                 return
         except:
             pass
-=======
-        if ctx.author.voice.channel.name == name:
-            await ctx.author.voice.channel.edit(user_limit=limit)
-            return
->>>>>>> 197c98904a0629581184f32448af57995facb08f
         for x in ctx.guild.categories:
             if x.name == "Temp Channels":
                 await x.create_voice_channel(name, user_limit=limit, bitrate=32000)
@@ -37,11 +29,11 @@ class SpawnVoiceCogs(commands.Cog):
 
     @tasks.loop(minutes=5.0)
     async def delete_voice(self):
-        print("Looking for empty game channels...")
+        count = 0
         for x in self.bot.guilds:
             for a in x.categories:
                 if a.name == "Temp Channels":
                     for v in a.voice_channels:
                         if len(v.members) == 0:
-                            print(f"Deleting {v.name}")
+                            count += 1
                             await v.delete()
