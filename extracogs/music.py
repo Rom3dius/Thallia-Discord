@@ -10,6 +10,8 @@ import youtube_dl
 
 # THIS CODE IS PAPYRUS'S CODE: https://github.com/PapyrusThePlant
 
+blacklist = []
+
 def setup(bot):
     """Extension's entry point."""
     bot.add_cog(Music(bot))
@@ -325,6 +327,9 @@ class Music(commands.Cog):
         List of supported sites : https://ytdl-org.github.io/youtube-dl/supportedsites.html
         """
         await ctx.message.add_reaction('\N{HOURGLASS}')
+        if ctx.author.id in blacklist:
+            await ctx.send("no")
+            return
 
         # Create the SongInfo
         song = await SongInfo.create(request, ctx.author, ctx.channel, loop=ctx.bot.loop)

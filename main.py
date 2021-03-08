@@ -1,9 +1,17 @@
-import os, logging, settings, time
+import os, logging, settings, time, discord
 from discord.ext import commands
 
 #logging.basicConfig(filename='thallia.log', level=logging.debug)
 
-bot = commands.Bot(command_prefix=settings.command_prefix)
+token = "NjQ3NTMzNTYzMzIzMDg4OTQ3.XdhEoA.-MygaOxXf4tuaxqzrkWgYQOMvpI"
+
+intents = discord.Intents.default()
+intents.voice_states = True
+intents.guilds = True
+intents.members = True
+intents.messages = True
+
+bot = commands.Bot(command_prefix=settings.command_prefix, intents=intents)
 cog_list = []
 
 def timestamp():
@@ -12,10 +20,9 @@ def timestamp():
 
 @bot.event
 async def on_ready():
-    #logging.info(timestamp() + 'Bot is ready!')
     pass
 
-# load legit cogs
+#load legit cogs
 for filename in os.listdir("corecogs"):
     if filename [-3:] == '.py':
         try:
@@ -23,8 +30,8 @@ for filename in os.listdir("corecogs"):
             bot.load_extension(f'corecogs.{filename[:-3]}')
             #logging.info(timestamp() + f'Corecog {filename[:-3]} has been loaded!')
         except Exception as err:
-            pass
+            print(err)
             #logging.error(timestamp() + f'Corecog {filename[:-3]}, failed to load!' + str(err))
 
 # start bot
-bot.run(settings.bot_token)
+bot.run(token)

