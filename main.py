@@ -1,26 +1,32 @@
-import os, logging, settings, time, discord
+import asyncio
+import os, time
+import discord
 from discord.ext import commands
+from discord_slash import SlashCommand, SlashContext
+from discord_slash.utils.manage_commands import create_option
 
-#logging.basicConfig(filename='thallia.log', level=logging.debug)
+bot = commands.Bot(intents=discord.Intents.all(), command_prefix='-')
+slash = SlashCommand(bot, sync_commands=True, sync_on_cog_reload=True)
 
-token = "NjQ3NTMzNTYzMzIzMDg4OTQ3.XdhEoA.-MygaOxXf4tuaxqzrkWgYQOMvpI"
-
-intents = discord.Intents.default()
-intents.voice_states = True
-intents.guilds = True
-intents.members = True
-intents.messages = True
-
-bot = commands.Bot(command_prefix=settings.command_prefix, intents=intents)
 cog_list = []
+guilds = [733783194695893033] #  733783194695893033
 
-def timestamp():
-    time = time.strftime("%Y-%m-%d:%H-%M-%S", time.localtime())
-    return time
+async def embed(msg):
+    try:
+        embedVar = discord.Embed(title=msg["title"], description=msg["body"], color=0xcd7f32)
+    except IndexError:
+        return False
+    try:
+        for x in msg['fields']:
+            embedVar.add_field(x, msg['fields'][x])
+    except KeyError:
+        pass
+    embedVar.set_author(name="Locum Tenens", icon_url="https://cdn.discordapp.com/avatars/647533563323088947/12f4c3b3c24a239bc3d45943ed8d70c3.webp?size=128&quot;")
+    return embedVar
 
 @bot.event
 async def on_ready():
-    pass
+    print('Ready!')
 
 #load legit cogs
 for filename in os.listdir("corecogs"):
@@ -31,7 +37,5 @@ for filename in os.listdir("corecogs"):
             #logging.info(timestamp() + f'Corecog {filename[:-3]} has been loaded!')
         except Exception as err:
             print(err)
-            #logging.error(timestamp() + f'Corecog {filename[:-3]}, failed to load!' + str(err))
 
-# start bot
-bot.run(token)
+bot.run("ODg5MTc3NTU5MjgyMTA2Mzk5.YUddIg.9Gv5lHXckcVXBcXWlWGzbi4K3FU")
