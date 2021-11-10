@@ -38,4 +38,4 @@ for filename in os.listdir("corecogs"):
         except Exception as err:
             print(err)
 
-bot.run("ODg5MTc3NTU5MjgyMTA2Mzk5.YUddIg.9Gv5lHXckcVXBcXWlWGzbi4K3FU")
+bot.run()
